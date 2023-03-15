@@ -1,0 +1,139 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+model Company {
+  id              Int      @id @default(autoincrement())
+  name            String
+  phone_number    String
+  address         String
+  city            String
+  postal_code     String
+  country         String
+  latitude        Decimal? @db.Decimal(4, 2)
+  longitude       Decimal? @db.Decimal(4, 2)
+  type            String
+  business_domain String
+
+  created_at  DateTime  @default(now())
+  modified_at DateTime
+  deleted_at  DateTime?
+
+  created_by  Int
+  modified_by Int
+  deleted_by  Int?
+
+  customers        Customer[]
+  tasks            Task[]
+  pickup_addresses PickupAddress[]
+
+  @@map("companies")
+}
+
+model Customer {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  full_name    String
+  apartment_no String?
+  phone_number String
+  address      String
+  city         String
+  postal_code  String
+  country      String
+  latitude     Decimal? @db.Decimal(4, 2)
+  longitude    Decimal? @db.Decimal(4, 2)
+
+  created_at  DateTime  @default(now())
+  modified_at DateTime
+  deleted_at  DateTime?
+
+  created_by  Int
+  modified_by Int
+  deleted_by  Int?
+
+  company_id Int
+  company    Company @relation(fields: [company_id], references: [id])
+
+  tasks Task[]
+  @@map("customers")
+}
+
+model Task {
+  id                      Int     @id @default(autoincrement())
+  type                    String
+  tracking_code           String
+  status                  String
+  currency                String?
+  amount                  Decimal @db.Decimal(10, 2)
+  email                   String?
+  vat_in_percent          Decimal @db.Decimal(2, 2)
+  distance_in_meter       Decimal @db.Decimal(7, 2)
+  pickup_location         String
+  dropoff_location        String
+  custom_dropoff_location String?
+
+  pickup_time        DateTime
+  actual_pickup_time DateTime?
+
+  returned_at DateTime?
+
+  drop_off_time       DateTime
+  actual_dropoff_time DateTime?
+
+  customer_signature_type      String?
+  pickup_comments_for_courier  String?
+  dropoff_comments_for_courier String?
+
+  courier_id Int?
+  order_id   Int?
+  fleet_id   Int?
+
+  created_at  DateTime  @default(now())
+  modified_at DateTime
+  deleted_at  DateTime?
+
+  created_by  Int
+  modified_by Int
+  deleted_by  Int?
+
+  company_id Int
+  company    Company @relation(fields: [company_id], references: [id])
+
+  customer_id Int
+  customer    Customer @relation(fields: [customer_id], references: [id])
+
+  @@index([status, company_id, customer_id, fleet_id])
+  @@map("tasks")
+}
+
+model PickupAddress {
+  id          Int     @id @default(autoincrement())
+  name        String
+  address     String
+  city        String
+  postal_code String
+  country     String
+  is_approved Boolean
+
+  created_at  DateTime  @default(now())
+  modified_at DateTime
+  deleted_at  DateTime?
+
+  created_by  Int
+  modified_by Int
+  deleted_by  Int?
+
+  company_id Int
+  company    Company @relation(fields: [company_id], references: [id])
+
+  @@map("pickupAddresses")
+}

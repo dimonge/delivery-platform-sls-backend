@@ -1,0 +1,15 @@
+-- AlterTable
+ALTER TABLE "tasks" ALTER COLUMN "currency" DROP NOT NULL,
+ALTER COLUMN "email" DROP NOT NULL,
+ALTER COLUMN "custom_dropoff_location" DROP NOT NULL,
+ALTER COLUMN "actual_pickup_time" DROP NOT NULL,
+ALTER COLUMN "returned_at" DROP NOT NULL,
+ALTER COLUMN "actual_dropoff_time" DROP NOT NULL,
+ALTER COLUMN "customer_signature_type" DROP NOT NULL,
+ALTER COLUMN "pickup_comments_for_courier" DROP NOT NULL,
+ALTER COLUMN "dropoff_comments_for_courier" DROP NOT NULL,
+ALTER COLUMN "courier_id" DROP NOT NULL,
+ALTER COLUMN "order_id" DROP NOT NULL,
+ALTER COLUMN "fleet_id" DROP NOT NULL,
+ALTER COLUMN "deleted_at" DROP NOT NULL,
+ALTER COLUMN "deleted_by" DROP NOT NULL;

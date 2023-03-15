@@ -1,0 +1,310 @@
+enum SIGNATURE_TYPE {
+  NO_CONTACT
+  SIGN
+}
+
+type Task {
+  id: ID
+  type: String
+  tracking_code: String
+  status: String
+  amount: Float
+  currency: String
+  vat_in_percent: String
+  customer: String
+  customer_signature_type: String
+  company_id: Int
+  custom_dropoff_address: String
+
+  pickup_location: String
+  dropoff_location: String
+  pickup_comments_for_courier: String
+  dropoff_comments_for_courier: String
+  email: AWSEmail
+  phone: AWSPhone
+  order_id: String
+
+  dropoff_time: AWSDateTime
+  actual_dropoff_time: AWSDateTime
+
+  returned_at: AWSDateTime
+
+  distance_in_meter: Int
+  
+  pickup_time: AWSDateTime
+  actual_pickup_time: AWSDateTime
+  
+  created_by: Int
+  modified_by: Int
+
+  created_at: AWSDateTime
+  modified_at: AWSDateTime
+}
+
+
+input CreateTaskInput {
+  type: String
+  tracking_code: String
+  status: String
+  amount: Float
+  currency: String
+  vat_in_percent: String
+  customer: String
+  customer_signature_type: String
+  company_id: Int
+  custom_dropoff_address: String
+
+  pickup_location: String
+  dropoff_location: String
+
+  pickup_comments_for_courier: String
+  dropoff_comments_for_courier: String
+
+  email: AWSEmail
+  phone_number: AWSPhone
+
+  dropoff_time: AWSDateTime
+  actual_dropoff_time: AWSDateTime
+
+  returned_at: AWSDateTime
+  
+  distance_in_meter: Int
+
+  pickup_time: AWSDateTime
+  actual_pickup_time: AWSDateTime
+
+  created_by: Int
+  modified_by: Int
+
+  modified_at: AWSDateTime
+}
+
+input UpdateTaskInput {
+  id: ID
+  type: String
+  tracking_code: String
+  status: String
+  amount: Float
+  currency: String
+  vat_in_percent: String
+  customer: String
+  customer_signature_type: String
+  company_id: String
+  custom_dropoff_address: String
+
+  pickup_location: String
+  dropoff_location: String
+  pickup_comments_for_courier: String
+  dropoff_comments_for_courier: String
+  email: AWSEmail
+  phone: AWSPhone
+
+  actual_dropoff_time: AWSDateTime
+  returned_at: AWSDateTime
+
+  distance_in_meter: Int
+  pickup_time: AWSDateTime
+  
+  modified_by: String
+
+  modified_at: AWSDateTime
+}
+
+
+enum BUSINESS_DOMAIN {
+  GROCERY
+  RESTAURANT
+  ECOMMERCE
+  CATERY
+}
+
+enum COMPANY_TYPE {
+  FLEET
+  DELIVERY
+}
+
+type Company {
+  id: ID
+  name: String
+  phone_number: AWSPhone  
+  address: String
+  city: String
+  postal_code: String
+  country: String
+  latitude: String
+  longitude: String
+  type: COMPANY_TYPE
+  business_domain: BUSINESS_DOMAIN, 
+  created_at: String
+  modified_at: String
+  created_by: String
+  modified_by: String
+}
+
+type Customer {
+  id: ID
+  full_name: String
+  apartment_no: String
+  address: String
+  latitude: String
+  longitude: String
+  city: String
+  postal_code: String
+  country: String
+  email: AWSEmail
+  phone_number: AWSPhone
+  created_by: String
+  updated_by: String
+  company_id: Int
+}
+enum APPLY_TO_TYPE {
+  PER_TASK
+  PER_EARNING
+}
+
+type FleetPrice {
+  id: ID
+  name: String
+  base_fare: Float
+  duration_fare: Float
+  waiting_fare: Float
+  distance_fare: Float
+  apply_to: APPLY_TO_TYPE
+  company_id: Int
+  address_id: Int
+  created_at: AWSDateTime
+  deleted_at: AWSDateTime
+  modified_at: AWSDateTime
+  created_by: String
+  modified_by: String
+  deleted_by: String
+}
+
+type PickupAddress {
+  id: ID
+  name: String
+  address: String
+  city: String
+  postal_code: String
+  is_approved: Boolean
+  country: String
+  company_id: String
+}
+
+input CreateCustomerInput {
+  full_name: String
+  email: AWSEmail
+  phone_number: AWSPhone
+  apartment_no: String
+  address: String
+  city: String
+  postal_code: String
+  country: String
+  updated_by: String
+  company_id: Int
+  created_by: Int
+}
+
+input UpdateCustomerInput {
+  id: Int!
+  full_name: String
+  email: AWSEmail
+  phone_number: AWSPhone
+  apartment_no: String
+  address: String
+  city: String
+  postal_code: String
+  country: String
+  updated_by: String
+  company_id: Int
+  modified_by: Int
+}
+
+input DeleteCustomerInput {
+  id: ID!
+}
+
+input CreatePickupAddressInput {
+  name: String
+  address: String
+  city: String
+  postal_code: String
+  is_approved: Boolean  
+  country: String
+  company_id: String
+  created_by: String
+  modified_by: String
+  created_at: AWSDateTime
+  modified_at: AWSDateTime
+}
+
+input UpdatePickupAddressInput {
+  id: ID!
+  name: String
+  address: String
+  city: String
+  postal_code: String
+  is_approved: Boolean
+  country: String
+  company_id: String
+  modified_by: String
+  modified_at: AWSDateTime
+}
+
+input CreateCompanyInput {
+  name: String
+  phone_number: AWSPhone  
+  address: String
+  city: String
+  postal_code: String
+  country: String
+  latitude: String
+  longitude: String
+  type: String
+  business_domain: BUSINESS_DOMAIN
+  modified_at: String
+  created_by: String
+  modified_by: String
+}
+
+input UpdateCompanyInput {
+  id: ID!
+  name: String
+  phone_number: AWSPhone  
+  address: String
+  city: String
+  postal_code: String
+  country: String
+  latitude: String
+  longitude: String
+  type: COMPANY_TYPE
+  business_domain: BUSINESS_DOMAIN
+  created_at: String
+  modified_at: String
+  created_by: String
+  modified_by: String
+}
+
+type Query {
+  listTasksByCompanyId(company_id: Int!): [Task]
+  listTasksAssignedToFleetByCompanyIdAndType(company_id: String!, type: COMPANY_TYPE!): [Task]
+  listPickupAddressesByCompanyId(company_id: String!): [PickupAddress]
+  listCustomersByCompanyId(company_id: Int!): [Customer]
+}
+
+type Mutation {
+  createTask(task: CreateTaskInput!): Task
+  updateTask(task: UpdateTaskInput!): Task
+  deleteTask(task_id: String!): String
+
+  createPickupAddress(address: CreatePickupAddressInput!): PickupAddress
+  updatePickupAddress(address: UpdatePickupAddressInput!): PickupAddress
+  deletePickupAddress(address_id: String!): String
+
+  createCustomer(company: CreateCustomerInput!): Customer
+  updateCustomer(customer_id: Int!, customer: UpdateCustomerInput!): Customer
+  deleteCustomer(customer_id: Int!): Customer
+
+  createCompany(company: CreateCompanyInput!): Company
+  updateCompany(company_id: Int!, company: UpdateCompanyInput): Company
+}
